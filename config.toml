@@ -1,9 +1,9 @@
 baseURL = "/"
 languageCode = "en-us"
-title = "Coding the Law"
+title = "/Coding the Law"
 theme = "minimal"
-disqusShortname = "username" # delete this to disable disqus comments
-googleAnalytics = ""
+disqusShortname = "/" # delete this to disable disqus comments
+googleAnalytics = "UA-129394383-1"
 
 [params]
     author = "DF"
