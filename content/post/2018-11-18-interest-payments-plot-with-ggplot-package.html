@@ -1,0 +1,70 @@
+---
+title: Interest Payments plot with ggplot package
+author: DF
+date: '2018-11-18'
+slug: interest-payments-plot-with-ggplot-package
+categories:
+  - economics
+tags:
+  - R
+  - ggplot
+  - plot
+---
+
+
+
+<p>A lot of things have been said and written about greek statistics and greek economy through the last years.</p>
+<p>Unfortunately, there are not many sources of data about key indicators of greek economy and that has contributed in a poorly informed public dialogue. Though, Bank of Greece has uploaded a few datasets in a dedicated website <em>(<a href="https://opendata.bankofgreece.gr/en/home" class="uri">https://opendata.bankofgreece.gr/en/home</a>)</em> so we can use them with <em>R</em> to shed some light in greek economic reality.</p>
+<p>We can start with a very simple and straight forward plot that depicts the interest payments for the greek public debt from 2010 to 2017.</p>
+<div id="preparing-the-data" class="section level1">
+<h1>Preparing the Data</h1>
+<p>First we have to load a few libraries to our workspace. We can do that either with library() or with require() function.</p>
+<pre class="r"><code>require(data.table) ; require(installr)
+require(dplyr) : require(ggplot2) ; require(lubridate)</code></pre>
+<pre><code>## [1] 1</code></pre>
+<p>Bank of Greece provides data only in the .xlsx format so we will download the file automatically and convert it through R with xlsx2csvv() function.</p>
+<pre class="r"><code>dataurl &lt;- &quot;https://opendata.bankofgreece.gr/datasetFile.ashx?fileName=BoG_CG_NBR_Cash_en_2018-06-26.xlsx&amp;folderName=DOAM&quot;
+
+download.file(dataurl, destfile = &quot;BoG_CG_NBR_Cash_en_2018-06-26.xlsx&quot;, mode = &quot;wb&quot;) 
+
+# now we will convert the file and we will store the data in a dataframe
+
+if(file.exists(&quot;BoG_CG_NBR_Cash_en_2018-06-26.xlsx&quot;)) {
+  
+  xlsx2csv(&quot;BoG_CG_NBR_Cash_en_2018-06-26.xlsx&quot;, &quot;BoG_CG_NBR_Cash_en_2018-06-26.csv&quot;) # convert the xlsx to csv
+  
+  df &lt;- fread(&quot;BoG_CG_NBR_Cash_en_2018-06-26.csv&quot;, header = T)
+}</code></pre>
+</div>
+<div id="clear-the-dataframe" class="section level1">
+<h1>Clear the Dataframe</h1>
+<pre class="r"><code># delete the empty variables
+
+df$V7 &lt;- NULL
+df$V8 &lt;- NULL
+df$V9 &lt;- NULL
+
+# change date variable to date format with lubridate package of the tidyverse
+
+df$From &lt;- ymd(df$From)
+df$To &lt;- ymd(df$To)
+
+df$year &lt;- year(df$To)  </code></pre>
+</div>
+<div id="making-the-plot-using-the-ggplot-package" class="section level1">
+<h1>Making the Plot using the ggplot package</h1>
+<pre class="r"><code># first make the basic plot 
+plot_hist_interest &lt;- ggplot(df, aes(x=To, y = Interest_payments)) 
+
+# then add the aesthetics
+
+plot_hist_interest + geom_col(alpha = 2/10 ,color = &quot;steelblue&quot;) +
+  labs(title = &quot;Interest Payments by month (cumulative)&quot;, subtitle = &quot;Greek Economy&quot;,
+       x =  &quot;Year&quot;,
+       y = &quot;Interest Payments (In million euros)&quot;) +
+  theme(plot.title = element_text(hjust = 0.5) ) +
+  theme(plot.subtitle = element_text(hjust = 0.5))</code></pre>
+<p><img src="/post/2018-11-18-interest-payments-plot-with-ggplot-package_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<p>From the above plot it is more than obvious that after 2012 the interest payments are substuntially reduced. This reduction was a direct result of a debt rectucture known as Private Sector Involvement.</p>
+<p>Greece accomplished through PSI a very generous haircut, almost 50%, of its bonds, through a highly complex procedure. If you are interested in the legal aspect of the PSI which had made use of advanced and new legal tools you may read a very thorough paper published in CESifo Working Paper Series (<a href="https://scholarship.law.duke.edu/cgi/viewcontent.cgi?article=5343&amp;context=faculty_scholarship" class="uri">https://scholarship.law.duke.edu/cgi/viewcontent.cgi?article=5343&amp;context=faculty_scholarship</a>)</p>
+</div>

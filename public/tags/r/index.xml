@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Coding the Law</title>
-    <link>/</link>
-    <description>Recent content on Coding the Law</description>
+    <title>R on Coding the Law</title>
+    <link>/tags/r/</link>
+    <description>Recent content in R on Coding the Law</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Sun, 18 Nov 2018 00:00:00 +0000</lastBuildDate>
     
-	<atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="/tags/r/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
@@ -19,15 +19,6 @@
       <guid>/post/interest-payments-plot-with-ggplot-package/</guid>
       <description>A lot of things have been said and written about greek statistics and greek economy through the last years.
 Unfortunately, there are not many sources of data about key indicators of greek economy and that has contributed in a poorly informed public dialogue. Though, Bank of Greece has uploaded a few datasets in a dedicated website (https://opendata.bankofgreece.gr/en/home) so we can use them with R to shed some light in greek economic reality.</description>
-    </item>
-    
-    <item>
-      <title>Sorry! No projects yet :)</title>
-      <link>/project/this-is-a-test-project/</link>
-      <pubDate>Sun, 18 Nov 2018 00:00:00 +0000</pubDate>
-      
-      <guid>/project/this-is-a-test-project/</guid>
-      <description>Sorry! No projects yet :)</description>
     </item>
     
   </channel>

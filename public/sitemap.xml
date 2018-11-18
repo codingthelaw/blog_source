@@ -3,24 +3,13 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
-    <loc>/project/project1/</loc>
+    <loc>/post/interest-payments-plot-with-ggplot-package/</loc>
+    <lastmod>2018-11-18T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>/project/project2/</loc>
-  </url>
-  
-  <url>
-    <loc>/project/project3/</loc>
-  </url>
-  
-  <url>
-    <loc>/project/project4/</loc>
-  </url>
-  
-  <url>
-    <loc>/tags/bootstrap/</loc>
-    <priority>0</priority>
+    <loc>/project/this-is-a-test-project/</loc>
+    <lastmod>2018-11-18T00:00:00+00:00</lastmod>
   </url>
   
   <url>
@@ -30,61 +19,49 @@
   
   <url>
     <loc>/</loc>
+    <lastmod>2018-11-18T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>/tags/css/</loc>
+    <loc>/categories/economics/</loc>
+    <lastmod>2018-11-18T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>/tags/go/</loc>
+    <loc>/tags/ggplot/</loc>
+    <lastmod>2018-11-18T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>/tags/golang/</loc>
+    <loc>/tags/plot/</loc>
+    <lastmod>2018-11-18T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>/tags/highlight-js/</loc>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>/tags/html/</loc>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>/tags/hugo/</loc>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>/tags/js/</loc>
+    <loc>/post/</loc>
+    <lastmod>2018-11-18T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>/project/</loc>
+    <lastmod>2018-11-18T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
-    <loc>/tags/responsive/</loc>
-    <priority>0</priority>
-  </url>
-  
-  <url>
-    <loc>/tags/syntax-highlighting/</loc>
+    <loc>/tags/r/</loc>
+    <lastmod>2018-11-18T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
   <url>
     <loc>/tags/</loc>
+    <lastmod>2018-11-18T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
   
