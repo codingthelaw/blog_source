@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Ggplot on /Coding the Law</title>
-    <link>/tags/ggplot/</link>
-    <description>Recent content in Ggplot on /Coding the Law</description>
+    <title>Api on /Coding the Law</title>
+    <link>/categories/api/</link>
+    <description>Recent content in Api on /Coding the Law</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Thu, 06 Dec 2018 00:00:00 +0000</lastBuildDate>
     
-	<atom:link href="/tags/ggplot/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="/categories/api/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
@@ -19,16 +19,6 @@
       <guid>/post/lex-perfecta-visualizing-european-law-acts-with-the-eurlex-api/</guid>
       <description>In the field of Law, most of the times it is more than difficult to get data in your hands so you can play around or conduct research.
 The European Union, as an international legal entity, produces its own legal actions in various forms, with its own procedures. Gathering data (or metadata) about this legal actions, offers the opportunity to gain a better understanding about the EU legal procedure as well as how each legal sector is regulated by the lawmaker.</description>
-    </item>
-    
-    <item>
-      <title>Interest Payments plot with ggplot package</title>
-      <link>/post/interest-payments-plot-with-ggplot-package/</link>
-      <pubDate>Sun, 18 Nov 2018 00:00:00 +0000</pubDate>
-      
-      <guid>/post/interest-payments-plot-with-ggplot-package/</guid>
-      <description>A lot of things have been said and written about greek statistics and greek economy through the last years.
-Unfortunately, there are not many sources of data about key indicators of greek economy and that has contributed in a poorly informed public dialogue. Though, Bank of Greece has uploaded a few datasets in a dedicated website (https://opendata.bankofgreece.gr/en/home) so we can use them with R to shed some light in greek economic reality.</description>
     </item>
     
   </channel>

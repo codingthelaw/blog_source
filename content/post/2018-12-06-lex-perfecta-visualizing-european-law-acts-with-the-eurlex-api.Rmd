@@ -1,0 +1,321 @@
+---
+title: 'Lex_perfecta(): Visualizing EU legislation with the EurLex API'
+author: DF
+date: '2018-12-06'
+slug: lex-perfecta-visualizing-european-law-acts-with-the-eurlex-api
+categories:
+  - Law
+  - API
+  - Function
+  - ggplot
+tags:
+  - Eur Lex
+  - API
+  - R Function
+  - ggplot
+  - Legal Acts
+  - R
+  - plot
+---
+In the field of Law, most of the times it is more than difficult to get data in your hands so you can play around or conduct research.
+
+The European Union, as an international legal entity, produces its own legal actions in various forms, with its own procedures. Gathering data (or metadata) about this legal actions, offers the opportunity to gain a better understanding about the EU legal procedure as well as how each legal sector is regulated by the lawmaker.
+
+In this post we will use an API (Application Programming Interface) to extract data about the EU legal acts type in each legislative sector and we will plot them with the help of ggplot. The API has been developed by Buhl & Rasmussen (a Copenhagen based company) and as it states in the documentation we will be able to access Eur Lex database which contains all documents printed in the Official Journal of the European Union since 1951. 
+
+A nice introduction and guide about using the Eurlex API has been posted in R bloggers and can be found [here](https://www.r-bloggers.com/accessing-apis-from-r-and-a-little-r-programming/). It is well written and helpful.
+
+So lets get started and connect to the EurLex database to retrieve a catalogue so we can figure out what we need. We will send a URL request and the database will respond with a json format.
+
+First we need to load some libraries.
+
+```{r, warning=FALSE, message=FALSE}
+
+library(httr) ; library(jsonlite) ; library(magrittr) ; require(ggplot2)
+options(stringsAsFactors = FALSE)
+
+url  <- "http://api.epdb.eu"
+
+path <- "eurlex/directory_code"
+
+raw.result <- GET(url = url, path = path)
+```
+
+So what we  have done with the above code, is to set a URL query and ask for the direcotry codes. The directory codes as we can read in the documentation will return "a list with the different directory codes and the number of documents under each code and it links to a list of these documents". Each directory code signifies a certain policy area. For example 03 is Agriculture directory and 11 is External Relations regulation directory. Every policy area directory has many subdirectories and you can explore them [here](https://eur-lex.europa.eu/browse/directories/legislation.html).
+
+We have stored the server respond to the raw.result variable, but it is in json format. We have to transform it in order to be human readable. Note that we only want to keep the $content. Then with the do.call() the list will be transformed to data.frame for easier data manipulation
+
+```{r}
+final_content <- fromJSON(rawToChar(raw.result$content))
+
+# now we have a huge list with sublists, its better to turn it to a dataframe
+
+df1 <- do.call(rbind.data.frame, final_content)
+
+class(df1) # now it's a clear dataframe
+```
+
+If you now print df1 dataframe, you can see that we have a dataframe where each row is an entry with a directory (and subdirectory) number and how many documents are included in every directory.
+
+Now we are ready to move on to the most interesting part. Suppose that we are interested to investigate how the Economic and Monetary policy area is regulated in terms EU legal Actions Types. Does EU prefers Regulations because they are lex perfecta, or chooses Decisions in order to offer a few degrees of flexibility in member states? This is exactly what we are going to answer.
+
+The Directory code for the  Economic and monetary policy area is 10. So now we want to filter our data and keep only the directories and subdirectories codes that begin with 10. Grep function is very handy in such cases.
+
+```{r}
+monetary_df <- grep("^02", df1[["directory_code"]]) 
+
+# subsetting only the code 10 about economic and monetary policy
+
+monetary_data <- df1[monetary_df,]
+
+# keep only the directory codes
+
+relevant_data <- monetary_data[["directory_code"]]
+
+
+#Retrieving energy documents meta data
+
+relevant_data <- as.list(relevant_data)
+```
+
+As you can see, we kept only the data we want, but then we turned the dataframe into a list. Furtermore, we need to name every element of the list as "dc". This is essential in order to feed the API with our queries later. The query will have the form of a URL like this "http://api.epdb.eu/eurlex/directory_code/?dc=02.10.00.00" . A basic for loop will do the trick.
+
+```{r}
+for (i in 1:length(relevant_data)) {
+  names(relevant_data)[i] <- "dc"
+}
+```
+
+Now our list look like this:
+```{r, echo=FALSE}
+relevant_data[1]
+```
+
+So now we have  a list with all the directory codes we need, we can try to download through the api all the directory codes one by one with the metadata for each directory legal documents.We have to figure out how many queries we will need. We already have created a list (relevant_data) with the directory codes.So we are ready to code a "for loop" to do the work for us!
+```{r}
+mon_data_complete <- list()  # intialize a list to store the results
+
+for (i in 1:length(relevant_data)) {
+   temp <- GET(url = url, path = path, query = relevant_data[i] )
+   store <- fromJSON(rawToChar(temp$content))  # now we have  a list to store
+   mon_data_complete[[i]] <- store
+   
+   Sys.sleep(time = 1) # dont overload eurlex server :)
+}
+```
+
+Lets explain a bit more what we have done with the above for loop. In order to communicate with the EurLex server and retrieve the data we want, we make in every iteration a query containing the directory codes from the list we previous made. Then we tranform every respond we receice from the server and store it to a new list (mon_data_complete).
+
+So now that we got the data we are interested we have a list with 13 elements, one for every directory code. Now this list's elements contains nested lists with the metadata for every legal document they contain. For example the 11th element of the list contains five nested lists. Each of this nested lists is in fact a legal document with it's metadata (19 fields).
+Lets see waht  we have metadata we have for every legal document:
+```{r}
+names(mon_data_complete[[1]][[1]])
+```
+Now that we know what we have, we can transform the list as a dataframe beacause ggplot does not work with lists. We can also subset our data and keep only three fields, namely "doc_id", "form", and "of_
+effect" which is the date that the action begin to produce its legal effects. We will code a for loop to do the hard work for us. Note that we have a second nested for loop inside the first, so we can iterate a t the same time inside a list and its nested lists.
+```{r}
+storeList <- list()
+
+# the for loop  in order to keep only $doc_id // $form / $ of_effect
+
+for (i in 1:length(mon_data_complete)) {
+  
+  temp.df <- data.frame(Doc_id = character(),
+                        Form = character(),
+                        Date = character(),
+                        stringsAsFactors = FALSE)
+  
+  for (k in 1:length(mon_data_complete[[i]])) {
+    if (length(mon_data_complete[[i]][[k]]) == 19 ) {
+  
+  temp.df[k,] <- c(mon_data_complete[[i]][[k]][["doc_id"]],       # messed up $ problem
+                   mon_data_complete[[i]][[k]][["form"]], 
+                   mon_data_complete[[i]][[k]][["of_effect"]])
+    }
+  }
+    #browser()  # for debugging purposes
+  
+  storeList[[i]] <- temp.df   # store the results in a list
+  
+}
+
+# now we can transform the list to a data frame
+final.df <- do.call(rbind.data.frame, storeList)
+```
+So now we have a simple dataframe with only three variables. It is better though to format them.
+```{r}
+## format the variables
+
+final.df$Doc_id <- as.numeric(final.df[["Doc_id"]])
+final.df$Form <- as.factor(final.df[["Form"]])
+final.df$Date <- as.Date(final.df[["Date"]], format = '%Y-%m-%d') # (format =) is important!
+```
+At this point we need to add another variable to include the legal status of each EU document, so we can use it later for the plot . As you may know EU produces acts, may or may not have legislative power. For example an EU regulation is poses restrictions and give rigths to every EU citizen directly (this is called Lex Perfecta in Latin), but other acts such as internal regulation have no binding power. So acts with some form of legal power will take the value "Legal_Act" and the rest will be described as "Non_Legal_Act". Creating this variable is simple:
+
+```{r}
+# create a new factor variable for legal status
+  
+  legalForms <- c("Regulation","Guideline","Decision","Recommendation","Opinion")
+  
+  final.df[["legal_Status"]] <- ifelse(final.df[["Form"]] %in% legalForms,"Legal_Act","Non_Legal_Act")
+  final.df[["legal_Status"]] <- as.factor(final.df[["legal_Status"]])
+```
+We are finally ready to plot our data using ggplot. 
+```{r}
+g <- final.df %>% subset(final.df[["legal_Status"]] == "Legal_Act") %>%
+  ggplot(.,aes(x= .$Form)) + geom_bar() +
+   labs(title = "EU Policy Sector") +
+   xlab("Legal Act Type") +
+   ylab("Count") +
+   theme(plot.title = element_text(hjust = 0.5) ) # to align the title
+   
+
+g
+
+```
+
+# Wrapping everything inside a function
+
+Finally, we can rewrite the above code to include it in a function so we can use it to plot each direcotry code without having to do anything more than passing the directory code as an argument. 
+
+Please note that there are two main differences from the previous code. First, we have enter a simple if else statement (line 180) to check for bad arguments that stops the execution and prints an error message. Second, at line 213 there is also a stop command with error message of the status code of our query is not 200, meaning that something went wrong wile downloading the data. There is also a few minor code modifications, mostly in data object names. 
+
+```{r, eval=FALSE}
+## user defined function for eurlex API ####
+
+
+# The function will only take one argument, the number of the directory code
+
+#load libraries
+
+library(httr) ; library(jsonlite) ; library(magrittr) ; require(ggplot2)
+
+options(stringsAsFactors = FALSE)
+
+lex_perfecta <- function(x){
+  
+  # function input validation
+  
+  if (!(x %in% 1:20)) {stop("Please enter a valid Directory Code from 01 to 20!")}
+  
+  # a simple if else function so we can avoid typing the function input as text
+  
+  #symb <- paste0("^",x, sep = 0)
+  if (x >= 10)   symb <- paste0("^",x) else
+    symb <- paste0("^0",x) 
+  
+  #download the contents of directory codes
+  
+  url1  <- "http://api.epdb.eu"
+  path1 <- "eurlex/directory_code"
+  unicode.result <- GET(url = url1, path = path1)
+  
+  # enter a stop command on error
+  if (unicode.result$status_code != 200) {stop("Network Error, please check your internet connection")}
+  
+  # transforming it from unicode format to a clean dataframe with only the dir codes we want
+  transformed_content <- fromJSON(rawToChar(unicode.result$content))
+  directorycodes.df <- do.call(rbind.data.frame, transformed_content)   # prblem with 02, the zero causes the shit
+  selected.df <- grep(symb, directorycodes.df$directory_code) 
+  selected_data.df <- directorycodes.df[selected.df,]
+
+  
+  # In order to use the api we need a list with only the directoty codes
+  
+  only_relevant_data.df <- selected_data.df$directory_code
+  
+  #Retrieving energy documents meta data
+  
+  only_relevant_data <- as.list(only_relevant_data.df)
+  
+  # name each list element as "dc" in order to get the API working
+  
+  # name every element as "dc"
+  
+  for (i in 1:length(only_relevant_data)) {
+    names(only_relevant_data)[i] <- "dc"
+  }
+  
+  #Now we can download through the api the whole selected folder of related legal documents
+  
+  selected_data_complete <- list()  # intialize a list to store the results
+  
+  
+  for (i in 1:length(only_relevant_data)) {
+    temp <- GET(url = url1, path = path1, query = only_relevant_data[i] )
+    store <- fromJSON(rawToChar(temp$content))  # now we have  a list to store
+    selected_data_complete[[i]] <- store
+    
+    Sys.sleep(time = 1)  
+  }
+  
+  #We will use another "for loop" to extract only the data we want to keep in a new dataframe
+  #First we have to create the data.frame to host the data and a temporary data frame inside the loop
+  
+  # final_results.df <- data.frame(Doc_id = character(),
+  #                                Form = character(),
+  #                                Date = character(),
+  #                                stringsAsFactors = FALSE)
+  storeList <- list()
+  
+  # the for loop  in order to keep only $doc_id // $form / $ of_effect
+  
+  for (i in 1:length(selected_data_complete)) {
+    temp.df <- data.frame(Doc_id = character(),
+                          Form = character(),
+                          Date = character(),
+                          stringsAsFactors = FALSE)
+    
+    for (k in 1:length(selected_data_complete[[i]])) {
+      
+      if (length(selected_data_complete[[i]][[k]]) == 19 ) {
+      
+      temp.df[k,] <- c(selected_data_complete[[i]][[k]][["doc_id"]],       # a bit messy :(
+                       selected_data_complete[[i]][[k]][["form"]], 
+                       selected_data_complete[[i]][[k]][["of_effect"]])
+      }
+    }
+    #browser()  # for debugging purposes
+    
+    storeList[[i]] <- temp.df   # store the results in a list
+    
+  }
+  
+## Visualizing with ggplot ##
+  final.df <- do.call(rbind.data.frame, storeList)   # create a data frame with the results
+  
+  
+  ## format the variables
+  
+  final.df[["Doc_id"]] <- as.numeric(final.df[["Doc_id"]])
+  final.df[["Form"]] <- as.factor(final.df[["Form"]])
+  final.df[["Date"]] <- as.Date(final.df[["Date"]], format = '%Y-%m-%d')
+  
+  # create a new factor variable for legal status
+  
+  legalForms <- c("Regulation","Guideline","Decision","Recommendation","Opinion")
+  
+  final.df[["legal_Status"]] <- ifelse(final.df[["Form"]] %in% legalForms,"Legal_Act","Non_Legal_Act")
+  final.df[["legal_Status"]] <- as.factor(final.df[["legal_Status"]])
+  
+  ## Plot Legal Acts in the selected sector ##
+  
+ selected_plot <-  final.df %>% subset(final.df[["legal_Status"]] == "Legal_Act") %>%
+    ggplot(.,aes(x= .$Form)) + geom_bar(fill = "cyan") +
+   labs(title = "EU Policy Sector") +
+   xlab("Legal Act Type") +
+   ylab("Count") +
+   theme(plot.title = element_text(hjust = 0.5) ) # to align the title
+  
+ return(selected_plot) 
+  
+}
+```
+
+
+
+
+
+
+
+

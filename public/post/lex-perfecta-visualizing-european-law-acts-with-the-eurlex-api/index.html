@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en-us">
+    <head>
+         
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Lex_perfecta(): Visualizing EU legislation with the EurLex API</title>
+        
+        <style>
+
+    html body {
+        font-family: 'Raleway', sans-serif;
+        background-color: white;
+    }
+
+    :root {
+        --accent: grey;
+        --border-width:  5px ;
+    }
+
+</style>
+
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
+
+
+ <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/idea.min.css"> 
+
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+ 
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/go.min.js"></script>  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/haskell.min.js"></script>  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/kotlin.min.js"></script>  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/scala.min.js"></script>  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/swift.min.js"></script>  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/languages/r.min.js"></script> 
+
+    <script>hljs.initHighlightingOnLoad();</script>
+
+
+
+
+
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+
+
+<script>$(document).on('click', function() { $('.collapse').collapse('hide'); })</script>
+ <meta name="generator" content="Hugo 0.51" />
+        
+
+        
+        
+        <script async src="https://www.googletagmanager.com/gtag/js?id=UA-129394383-1"></script>
+        <script>
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments)};
+          gtag('js', new Date());
+
+          gtag('config', 'UA-129394383-1');
+        </script>
+        
+    </head>
+
+    
+    
+    <script type="text/javascript" async
+      src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+    </script>
+    
+
+    <body>
+         
+        <nav class="navbar navbar-default navbar-fixed-top">
+
+            <div class="container">
+
+                <div class="navbar-header">
+
+                    <a class="navbar-brand visible-xs" href="#">Lex_perfecta(): Visualizing EU legislation with the EurLex API</a>
+
+                    <button class="navbar-toggle" data-target=".navbar-collapse" data-toggle="collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+
+                </div>
+
+                <div class="collapse navbar-collapse">
+
+                    
+                        <ul class="nav navbar-nav">
+                            
+                                <li><a href="/">Home</a></li>
+                            
+                                <li><a href="/post/">Posts</a></li>
+                            
+                                <li><a href="/project/">Projects</a></li>
+                            
+                        </ul>
+                    
+
+                    
+                        <ul class="nav navbar-nav navbar-right">
+                            
+                                <li class="navbar-icon"><a href="mailto:dimitris.a.fistiklis@gmail.com"><i class="fa fa-envelope-o"></i></a></li>
+                            
+                                <li class="navbar-icon"><a href="https://github.com/codingthelaw"><i class="fa fa-github"></i></a></li>
+                            
+                                <li class="navbar-icon"><a href="https://twitter.com/FerendaLege"><i class="fa fa-twitter"></i></a></li>
+                            
+                                <li class="navbar-icon"><a href="https://www.linkedin.com/in/dfistiklis/"><i class="fa fa-linkedin"></i></a></li>
+                            
+                        </ul>
+                    
+
+                </div>
+
+            </div>
+
+        </nav>
+
+
+<main>
+
+    <div class="item">
+
+    
+    
+    
+
+    
+    
+
+    <h4><a href="/post/lex-perfecta-visualizing-european-law-acts-with-the-eurlex-api/">Lex_perfecta(): Visualizing EU legislation with the EurLex API</a></h4>
+    <h5>December 6, 2018</h5>
+    
+    <a href="/tags/ggplot"><kbd class="item-tag">ggplot</kbd></a>
+    
+    <a href="/tags/legal-acts"><kbd class="item-tag">Legal Acts</kbd></a>
+    
+    <a href="/tags/r"><kbd class="item-tag">R</kbd></a>
+    
+    <a href="/tags/plot"><kbd class="item-tag">plot</kbd></a>
+    
+    <a href="/tags/api"><kbd class="item-tag">API</kbd></a>
+    
+
+</div>
+
+
+    <br> <div class="text-justify">
+
+
+<p>In the field of Law, most of the times it is more than difficult to get data in your hands so you can play around or conduct research.</p>
+<p>The European Union, as an international legal entity, produces its own legal actions in various forms, with its own procedures. Gathering data (or metadata) about this legal actions, offers the opportunity to gain a better understanding about the EU legal procedure as well as how each legal sector is regulated by the lawmaker.</p>
+<p>In this post we will use an API (Application Programming Interface) to extract data about the EU legal acts type in each legislative sector and we will plot them with the help of ggplot. The API has been developed by Buhl &amp; Rasmussen (a Copenhagen based company) and as it states in the documentation we will be able to access Eur Lex database which contains all documents printed in the Official Journal of the European Union since 1951.</p>
+<p>A nice introduction and guide about using the Eurlex API has been posted in R bloggers and can be found <a href="https://www.r-bloggers.com/accessing-apis-from-r-and-a-little-r-programming/">here</a>. It is well written and helpful.</p>
+<p>So lets get started and connect to the EurLex database to retrieve a catalogue so we can figure out what we need. We will send a URL request and the database will respond with a json format.</p>
+<p>First we need to load some libraries.</p>
+<pre class="r"><code>library(httr) ; library(jsonlite) ; library(magrittr) ; require(ggplot2)
+options(stringsAsFactors = FALSE)
+
+url  &lt;- &quot;http://api.epdb.eu&quot;
+
+path &lt;- &quot;eurlex/directory_code&quot;
+
+raw.result &lt;- GET(url = url, path = path)</code></pre>
+<p>So what we have done with the above code, is to set a URL query and ask for the direcotry codes. The directory codes as we can read in the documentation will return “a list with the different directory codes and the number of documents under each code and it links to a list of these documents”. Each directory code signifies a certain policy area. For example 03 is Agriculture directory and 11 is External Relations regulation directory. Every policy area directory has many subdirectories and you can explore them <a href="https://eur-lex.europa.eu/browse/directories/legislation.html">here</a>.</p>
+<p>We have stored the server respond to the raw.result variable, but it is in json format. We have to transform it in order to be human readable. Note that we only want to keep the $content. Then with the do.call() the list will be transformed to data.frame for easier data manipulation</p>
+<pre class="r"><code>final_content &lt;- fromJSON(rawToChar(raw.result$content))
+
+# now we have a huge list with sublists, its better to turn it to a dataframe
+
+df1 &lt;- do.call(rbind.data.frame, final_content)
+
+class(df1) # now it&#39;s a clear dataframe</code></pre>
+<pre><code>## [1] &quot;data.frame&quot;</code></pre>
+<p>If you now print df1 dataframe, you can see that we have a dataframe where each row is an entry with a directory (and subdirectory) number and how many documents are included in every directory.</p>
+<p>(parenthesis about EU legal Actions)</p>
+<p>Now we are ready to move on to the most interesting part. Suppose that we are interested to investigate how the Economic and Monetary policy area is regulated in terms EU legal Actions Types. Does EU prefers Regulations because they are lex perfecta, or chooses Decisions in order to offer a few degrees of flexibility in member states? This is exactly what we are going to answer.</p>
+<p>The Directory code for the Economic and monetary policy area is 10. So now we want to filter our data and keep only the directories and subdirectories codes that begin with 10. Grep function is very handy in such cases.</p>
+<pre class="r"><code>monetary_df &lt;- grep(&quot;^02&quot;, df1[[&quot;directory_code&quot;]]) 
+
+# subsetting only the code 10 about economic and monetary policy
+
+monetary_data &lt;- df1[monetary_df,]
+
+# keep only the directory codes
+
+relevant_data &lt;- monetary_data[[&quot;directory_code&quot;]]
+
+
+#Retrieving energy documents meta data
+
+relevant_data &lt;- as.list(relevant_data)</code></pre>
+<p>As you can see, we kept only the data we want, but then we turned the dataframe into a list. Furtermore, we need to name every element of the list as “dc”. This is essential in order to feed the API with our queries later. The query will have the form of a URL like this{enter url} . A basic for loop will do the trick.</p>
+<pre class="r"><code>for (i in 1:length(relevant_data)) {
+  names(relevant_data)[i] &lt;- &quot;dc&quot;
+}</code></pre>
+<p>Now our list look like this:</p>
+<pre><code>## $dc
+## [1] &quot;02.05.00.00&quot;</code></pre>
+<p>So now we have a list with all the directory codes we need, we can try to download through the api all the directory codes one by one with the metadata for each directory legal documents.We have to figure out how many queries we will need. We already have created a list (relevant_data) with the directory codes.So we are ready to code a “for loop” to do the work for us!</p>
+<pre class="r"><code>mon_data_complete &lt;- list()  # intialize a list to store the results
+
+for (i in 1:length(relevant_data)) {
+   temp &lt;- GET(url = url, path = path, query = relevant_data[i] )
+   store &lt;- fromJSON(rawToChar(temp$content))  # now we have  a list to store
+   mon_data_complete[[i]] &lt;- store
+   
+   Sys.sleep(time = 1) # dont overload eurlex server :)
+}</code></pre>
+<p>Lets explain a bit more what we have done with the above for loop. In order to communicate with the EurLex server and retrieve the data we want, we make in every iteration a query containing the directory codes from the list we previous made. Then we tranform every respond we receice from the server and store it to a new list (mon_data_complete).</p>
+<p>So now that we got the data we are interested we have a list with 13 elements, one for every directory code. Now this list’s elements contains nested lists with the metadata for every legal document they contain. For example the 11th element of the list contains five nested lists. Each of this nested lists is in fact a legal document with it’s metadata (19 fields).
+Lets see waht we have metadata we have for every legal document:</p>
+<pre class="r"><code>names(mon_data_complete[[1]][[1]])</code></pre>
+<pre><code>##  [1] &quot;form&quot;                &quot;title&quot;               &quot;api_url&quot;            
+##  [4] &quot;eurlex_perma_url&quot;    &quot;doc_id&quot;              &quot;date_document&quot;      
+##  [7] &quot;of_effect&quot;           &quot;end_validity&quot;        &quot;oj_date&quot;            
+## [10] &quot;directory_codes&quot;     &quot;legal_basis&quot;         &quot;addressee&quot;          
+## [13] &quot;internal_ref&quot;        &quot;additional_info&quot;     &quot;text_url&quot;           
+## [16] &quot;prelex_relation&quot;     &quot;relationships&quot;       &quot;eurovoc_descriptors&quot;
+## [19] &quot;subject_matter&quot;</code></pre>
+<p>Now that we know what we have, we can transform the list as a dataframe beacause ggplot does not work with lists. We can also subset our data and keep only three fields, namely “doc_id”, “form”, and “of_
+effect” which is the date that the action begin to produce its legal effects. We will code a for loop to do the hard work for us. Note that we have a second nested for loop inside the first, so we can iterate a t the same time inside a list and its nested lists.</p>
+<pre class="r"><code>storeList &lt;- list()
+
+# the for loop  in order to keep only $doc_id // $form / $ of_effect
+
+for (i in 1:length(mon_data_complete)) {
+  
+  temp.df &lt;- data.frame(Doc_id = character(),
+                        Form = character(),
+                        Date = character(),
+                        stringsAsFactors = FALSE)
+  
+  for (k in 1:length(mon_data_complete[[i]])) {
+    if (length(mon_data_complete[[i]][[k]]) == 19 ) {
+  
+  temp.df[k,] &lt;- c(mon_data_complete[[i]][[k]][[&quot;doc_id&quot;]],       # messed up $ problem
+                   mon_data_complete[[i]][[k]][[&quot;form&quot;]], 
+                   mon_data_complete[[i]][[k]][[&quot;of_effect&quot;]])
+    }
+  }
+    #browser()  # for debugging purposes
+  
+  storeList[[i]] &lt;- temp.df   # store the results in a list
+  
+}
+
+# now we can transform the list to a data frame
+final.df &lt;- do.call(rbind.data.frame, storeList)</code></pre>
+<p>So now we have a simple dataframe with only three variables. It is better though to format them.</p>
+<pre class="r"><code>## format the variables
+
+final.df$Doc_id &lt;- as.numeric(final.df[[&quot;Doc_id&quot;]])
+final.df$Form &lt;- as.factor(final.df[[&quot;Form&quot;]])
+final.df$Date &lt;- as.Date(final.df[[&quot;Date&quot;]], format = &#39;%Y-%m-%d&#39;) # (format =) is important!</code></pre>
+<p>At this point we need to add another variable to include the legal status of each EU document, so we can use it later for the plot . As you may know EU produces acts, may or may not have legislative power. For example an EU regulation is poses restrictions and give rigths to every EU citizen directly (this is called Lex Perfecta in Latin), but other acts such as internal regulation have no binding power. So acts with some form of legal power will take the value “Legal_Act” and the rest will be described as “Non_Legal_Act”. Creating this variable is simple:</p>
+<pre class="r"><code># create a new factor variable for legal status
+  
+  legalForms &lt;- c(&quot;Regulation&quot;,&quot;Guideline&quot;,&quot;Decision&quot;,&quot;Recommendation&quot;,&quot;Opinion&quot;)
+  
+  final.df[[&quot;legal_Status&quot;]] &lt;- ifelse(final.df[[&quot;Form&quot;]] %in% legalForms,&quot;Legal_Act&quot;,&quot;Non_Legal_Act&quot;)
+  final.df[[&quot;legal_Status&quot;]] &lt;- as.factor(final.df[[&quot;legal_Status&quot;]])</code></pre>
+<p>We are finally ready to plot our data using ggplot.</p>
+<pre class="r"><code>g &lt;- final.df %&gt;% subset(final.df[[&quot;legal_Status&quot;]] == &quot;Legal_Act&quot;) %&gt;%
+  ggplot(.,aes(x= .$Form)) + geom_bar() +
+   labs(title = &quot;EU Policy Sector&quot;) +
+   xlab(&quot;Legal Act Type&quot;) +
+   ylab(&quot;Count&quot;) +
+   theme(plot.title = element_text(hjust = 0.5) ) # to align the title
+   
+
+g</code></pre>
+<p><img src="/post/2018-12-06-lex-perfecta-visualizing-european-law-acts-with-the-eurlex-api_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
+<div id="wrapping-everything-inside-a-function" class="section level1">
+<h1>Wrapping everything inside a function</h1>
+<p>Finally, we can rewrite the above code to include it in a function so we can use it to plot each direcotry code without having to do anything more than passing the directory code as an argument.</p>
+<p>Please note that there are two main differences from the previous code. First, we have enter a simple if else statement (line 180) to check for bad arguments that stops the execution and prints an error message. Second, at line 213 there is also a stop command with error message of the status code of our query is not 200, meaning that something went wrong wile downloading the data. There is also a few minor code modifications, mostly in data object names.</p>
+<pre class="r"><code>## user defined function for eurlex API ####
+
+
+# The function will only take one argument, the number of the directory code
+
+#load libraries
+
+library(httr) ; library(jsonlite) ; library(magrittr) ; require(ggplot2)
+
+options(stringsAsFactors = FALSE)
+
+lex_perfecta &lt;- function(x){
+  
+  # function input validation
+  
+  if (!(x %in% 1:20)) {stop(&quot;Please enter a valid Directory Code from 01 to 20!&quot;)}
+  
+  # a simple if else function so we can avoid typing the function input as text
+  
+  #symb &lt;- paste0(&quot;^&quot;,x, sep = 0)
+  if (x &gt;= 10)   symb &lt;- paste0(&quot;^&quot;,x) else
+    symb &lt;- paste0(&quot;^0&quot;,x) 
+  
+  #download the contents of directory codes
+  
+  url1  &lt;- &quot;http://api.epdb.eu&quot;
+  path1 &lt;- &quot;eurlex/directory_code&quot;
+  unicode.result &lt;- GET(url = url1, path = path1)
+  
+  # enter a stop command on error
+  if (unicode.result$status_code != 200) {stop(&quot;Network Error, please check your internet connection&quot;)}
+  
+  # transforming it from unicode format to a clean dataframe with only the dir codes we want
+  transformed_content &lt;- fromJSON(rawToChar(unicode.result$content))
+  directorycodes.df &lt;- do.call(rbind.data.frame, transformed_content)   # prblem with 02, the zero causes the shit
+  selected.df &lt;- grep(symb, directorycodes.df$directory_code) 
+  selected_data.df &lt;- directorycodes.df[selected.df,]
+
+  
+  # In order to use the api we need a list with only the directoty codes
+  
+  only_relevant_data.df &lt;- selected_data.df$directory_code
+  
+  #Retrieving energy documents meta data
+  
+  only_relevant_data &lt;- as.list(only_relevant_data.df)
+  
+  # name each list element as &quot;dc&quot; in order to get the API working
+  
+  # name every element as &quot;dc&quot;
+  
+  for (i in 1:length(only_relevant_data)) {
+    names(only_relevant_data)[i] &lt;- &quot;dc&quot;
+  }
+  
+  #Now we can download through the api the whole selected folder of related legal documents
+  
+  selected_data_complete &lt;- list()  # intialize a list to store the results
+  
+  
+  for (i in 1:length(only_relevant_data)) {
+    temp &lt;- GET(url = url1, path = path1, query = only_relevant_data[i] )
+    store &lt;- fromJSON(rawToChar(temp$content))  # now we have  a list to store
+    selected_data_complete[[i]] &lt;- store
+    
+    Sys.sleep(time = 1)  
+  }
+  
+  #We will use another &quot;for loop&quot; to extract only the data we want to keep in a new dataframe
+  #First we have to create the data.frame to host the data and a temporary data frame inside the loop
+  
+  # final_results.df &lt;- data.frame(Doc_id = character(),
+  #                                Form = character(),
+  #                                Date = character(),
+  #                                stringsAsFactors = FALSE)
+  storeList &lt;- list()
+  
+  # the for loop  in order to keep only $doc_id // $form / $ of_effect
+  
+  for (i in 1:length(selected_data_complete)) {
+    temp.df &lt;- data.frame(Doc_id = character(),
+                          Form = character(),
+                          Date = character(),
+                          stringsAsFactors = FALSE)
+    
+    for (k in 1:length(selected_data_complete[[i]])) {
+      
+      if (length(selected_data_complete[[i]][[k]]) == 19 ) {
+      
+      temp.df[k,] &lt;- c(selected_data_complete[[i]][[k]][[&quot;doc_id&quot;]],       # a bit messy :(
+                       selected_data_complete[[i]][[k]][[&quot;form&quot;]], 
+                       selected_data_complete[[i]][[k]][[&quot;of_effect&quot;]])
+      }
+    }
+    #browser()  # for debugging purposes
+    
+    storeList[[i]] &lt;- temp.df   # store the results in a list
+    
+  }
+  
+## Visualizing with ggplot ##
+  final.df &lt;- do.call(rbind.data.frame, storeList)   # create a data frame with the results
+  
+  
+  ## format the variables
+  
+  final.df[[&quot;Doc_id&quot;]] &lt;- as.numeric(final.df[[&quot;Doc_id&quot;]])
+  final.df[[&quot;Form&quot;]] &lt;- as.factor(final.df[[&quot;Form&quot;]])
+  final.df[[&quot;Date&quot;]] &lt;- as.Date(final.df[[&quot;Date&quot;]], format = &#39;%Y-%m-%d&#39;)
+  
+  # create a new factor variable for legal status
+  
+  legalForms &lt;- c(&quot;Regulation&quot;,&quot;Guideline&quot;,&quot;Decision&quot;,&quot;Recommendation&quot;,&quot;Opinion&quot;)
+  
+  final.df[[&quot;legal_Status&quot;]] &lt;- ifelse(final.df[[&quot;Form&quot;]] %in% legalForms,&quot;Legal_Act&quot;,&quot;Non_Legal_Act&quot;)
+  final.df[[&quot;legal_Status&quot;]] &lt;- as.factor(final.df[[&quot;legal_Status&quot;]])
+  
+  ## Plot Legal Acts in the selected sector ##
+  
+ selected_plot &lt;-  final.df %&gt;% subset(final.df[[&quot;legal_Status&quot;]] == &quot;Legal_Act&quot;) %&gt;%
+    ggplot(.,aes(x= .$Form)) + geom_bar(fill = &quot;cyan&quot;) +
+   labs(title = &quot;EU Sector&quot;) +
+   xlab(&quot;Legal Act Type&quot;) +
+   ylab(&quot;Count&quot;) +
+   theme(plot.title = element_text(hjust = 0.5) ) # to align the title
+   
+   
+  
+ return(selected_plot) 
+  
+  
+}</code></pre>
+</div>
+</div>
+
+    
+    
+
+    
+
+        <h4 class="page-header">Related</h4>
+
+         <div class="item">
+
+    
+    
+    
+
+    
+    
+
+    <h4><a href="/post/interest-payments-plot-with-ggplot-package/">Interest Payments plot with ggplot package</a></h4>
+    <h5>November 18, 2018</h5>
+    
+    <a href="/tags/r"><kbd class="item-tag">R</kbd></a>
+    
+    <a href="/tags/ggplot"><kbd class="item-tag">ggplot</kbd></a>
+    
+    <a href="/tags/plot"><kbd class="item-tag">plot</kbd></a>
+    
+
+</div>
+ 
+
+    
+
+    
+
+        <h4 class="page-header">Comments</h4>
+
+        <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "/" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+
+    
+
+</main>
+
+        <footer>
+
+            <p class="copyright text-muted">&copy; All rights reserved. Powered by <a href="https://gohugo.io">Hugo</a> and <a href="https://github.com/calintat/minimal">Minimal</a></p>
+
+        </footer>
+       
+    </body>
+
+</html>
+
