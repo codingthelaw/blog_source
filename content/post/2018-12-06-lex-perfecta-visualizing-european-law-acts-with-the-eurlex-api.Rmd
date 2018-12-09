@@ -180,6 +180,8 @@ Finally, we can rewrite the above code to include it in a function so we can use
 
 Please note that there are two main differences from the previous code. First, we have enter a simple if else statement (line 180) to check for bad arguments that stops the execution and prints an error message. Second, at line 213 there is also a stop command with error message of the status code of our query is not 200, meaning that something went wrong wile downloading the data. There is also a few minor code modifications, mostly in data object names. 
 
+Now you can pass any directory code as an argument to lex_perfecat and the function  (full list [here](https://eur-lex.europa.eu/browse/directories/legislation.html)), will download, maniulate the data and produce the respective plot. For example, lex_perfecta(02) will produce the same plot as we already did in the post. Pease be patient because the function needs some time to download the data, as we have included a sys.sleep() function to avoid put a lot of pressure in eurLex server.
+
 ```{r, eval=FALSE}
 ## user defined function for eurlex API ####
 
