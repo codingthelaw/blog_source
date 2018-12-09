@@ -128,7 +128,7 @@ for (i in 1:length(mon_data_complete)) {
   for (k in 1:length(mon_data_complete[[i]])) {
     if (length(mon_data_complete[[i]][[k]]) == 19 ) {
   
-  temp.df[k,] <- c(mon_data_complete[[i]][[k]][["doc_id"]],       # messed up $ problem
+  temp.df[k,] <- c(mon_data_complete[[i]][[k]][["doc_id"]],       
                    mon_data_complete[[i]][[k]][["form"]], 
                    mon_data_complete[[i]][[k]][["of_effect"]])
     }
@@ -217,7 +217,7 @@ lex_perfecta <- function(x){
   
   # transforming it from unicode format to a clean dataframe with only the dir codes we want
   transformed_content <- fromJSON(rawToChar(unicode.result$content))
-  directorycodes.df <- do.call(rbind.data.frame, transformed_content)   # prblem with 02, the zero causes the shit
+  directorycodes.df <- do.call(rbind.data.frame, transformed_content)   
   selected.df <- grep(symb, directorycodes.df$directory_code) 
   selected_data.df <- directorycodes.df[selected.df,]
 

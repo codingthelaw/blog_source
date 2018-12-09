@@ -9,11 +9,13 @@ categories:
   - Function
   - ggplot
 tags:
+  - Eur Lex
+  - API
+  - R Function
   - ggplot
   - Legal Acts
   - R
   - plot
-  - API
 ---
 
 
@@ -43,7 +45,6 @@ df1 &lt;- do.call(rbind.data.frame, final_content)
 class(df1) # now it&#39;s a clear dataframe</code></pre>
 <pre><code>## [1] &quot;data.frame&quot;</code></pre>
 <p>If you now print df1 dataframe, you can see that we have a dataframe where each row is an entry with a directory (and subdirectory) number and how many documents are included in every directory.</p>
-<p>(parenthesis about EU legal Actions)</p>
 <p>Now we are ready to move on to the most interesting part. Suppose that we are interested to investigate how the Economic and Monetary policy area is regulated in terms EU legal Actions Types. Does EU prefers Regulations because they are lex perfecta, or chooses Decisions in order to offer a few degrees of flexibility in member states? This is exactly what we are going to answer.</p>
 <p>The Directory code for the Economic and monetary policy area is 10. So now we want to filter our data and keep only the directories and subdirectories codes that begin with 10. Grep function is very handy in such cases.</p>
 <pre class="r"><code>monetary_df &lt;- grep(&quot;^02&quot;, df1[[&quot;directory_code&quot;]]) 
@@ -60,7 +61,7 @@ relevant_data &lt;- monetary_data[[&quot;directory_code&quot;]]
 #Retrieving energy documents meta data
 
 relevant_data &lt;- as.list(relevant_data)</code></pre>
-<p>As you can see, we kept only the data we want, but then we turned the dataframe into a list. Furtermore, we need to name every element of the list as “dc”. This is essential in order to feed the API with our queries later. The query will have the form of a URL like this{enter url} . A basic for loop will do the trick.</p>
+<p>As you can see, we kept only the data we want, but then we turned the dataframe into a list. Furtermore, we need to name every element of the list as “dc”. This is essential in order to feed the API with our queries later. The query will have the form of a URL like this “<a href="http://api.epdb.eu/eurlex/directory_code/?dc=02.10.00.00" class="uri">http://api.epdb.eu/eurlex/directory_code/?dc=02.10.00.00</a>” . A basic for loop will do the trick.</p>
 <pre class="r"><code>for (i in 1:length(relevant_data)) {
   names(relevant_data)[i] &lt;- &quot;dc&quot;
 }</code></pre>
@@ -104,7 +105,7 @@ for (i in 1:length(mon_data_complete)) {
   for (k in 1:length(mon_data_complete[[i]])) {
     if (length(mon_data_complete[[i]][[k]]) == 19 ) {
   
-  temp.df[k,] &lt;- c(mon_data_complete[[i]][[k]][[&quot;doc_id&quot;]],       # messed up $ problem
+  temp.df[k,] &lt;- c(mon_data_complete[[i]][[k]][[&quot;doc_id&quot;]],       
                    mon_data_complete[[i]][[k]][[&quot;form&quot;]], 
                    mon_data_complete[[i]][[k]][[&quot;of_effect&quot;]])
     }
@@ -145,6 +146,7 @@ g</code></pre>
 <h1>Wrapping everything inside a function</h1>
 <p>Finally, we can rewrite the above code to include it in a function so we can use it to plot each direcotry code without having to do anything more than passing the directory code as an argument.</p>
 <p>Please note that there are two main differences from the previous code. First, we have enter a simple if else statement (line 180) to check for bad arguments that stops the execution and prints an error message. Second, at line 213 there is also a stop command with error message of the status code of our query is not 200, meaning that something went wrong wile downloading the data. There is also a few minor code modifications, mostly in data object names.</p>
+<p>Now you can pass any directory code as an argument to lex_perfecat and the function (full list <a href="https://eur-lex.europa.eu/browse/directories/legislation.html">here</a>), will download, maniulate the data and produce the respective plot. For example, lex_perfecta(02) will produce the same plot as we already did in the post. Pease be patient because the function needs some time to download the data, as we have included a sys.sleep() function to avoid put a lot of pressure in eurLex server.</p>
 <pre class="r"><code>## user defined function for eurlex API ####
 
 
@@ -179,7 +181,7 @@ lex_perfecta &lt;- function(x){
   
   # transforming it from unicode format to a clean dataframe with only the dir codes we want
   transformed_content &lt;- fromJSON(rawToChar(unicode.result$content))
-  directorycodes.df &lt;- do.call(rbind.data.frame, transformed_content)   # prblem with 02, the zero causes the shit
+  directorycodes.df &lt;- do.call(rbind.data.frame, transformed_content)   
   selected.df &lt;- grep(symb, directorycodes.df$directory_code) 
   selected_data.df &lt;- directorycodes.df[selected.df,]
 
@@ -266,15 +268,12 @@ lex_perfecta &lt;- function(x){
   
  selected_plot &lt;-  final.df %&gt;% subset(final.df[[&quot;legal_Status&quot;]] == &quot;Legal_Act&quot;) %&gt;%
     ggplot(.,aes(x= .$Form)) + geom_bar(fill = &quot;cyan&quot;) +
-   labs(title = &quot;EU Sector&quot;) +
+   labs(title = &quot;EU Policy Sector&quot;) +
    xlab(&quot;Legal Act Type&quot;) +
    ylab(&quot;Count&quot;) +
    theme(plot.title = element_text(hjust = 0.5) ) # to align the title
-   
-   
-  
+ 
  return(selected_plot) 
-  
   
 }</code></pre>
 </div>

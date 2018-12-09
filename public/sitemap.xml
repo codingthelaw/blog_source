@@ -48,6 +48,12 @@
   </url>
   
   <url>
+    <loc>/tags/eur-lex/</loc>
+    <lastmod>2018-12-06T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
     <loc>/categories/function/</loc>
     <lastmod>2018-12-06T00:00:00+00:00</lastmod>
     <priority>0</priority>
@@ -97,6 +103,12 @@
   
   <url>
     <loc>/tags/r/</loc>
+    <lastmod>2018-12-06T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>/tags/r-function/</loc>
     <lastmod>2018-12-06T00:00:00+00:00</lastmod>
     <priority>0</priority>
   </url>
