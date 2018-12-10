@@ -56,7 +56,7 @@ googleAnalytics = "UA-129394383-1"
     name = "linkedin"
     weight = 4
 
-#[[menu.icon]]
-#    url = "https://www.stackoverflow.com/username/"
-#    name = "stack-overflow"
-#    weight = 5
+[[menu.icon]]
+    url = "https://www.r-bloggers.com/"
+    name = "database"
+    weight = 5
